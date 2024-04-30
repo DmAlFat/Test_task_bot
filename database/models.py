@@ -1,8 +1,13 @@
 from sqlalchemy import String
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
 
-engine = create_async_engine(url='sqlite+aiosqlite:///db.sqlite3')
+from config import DB_HOST, DB_USER, DB_PASSWORD, DB_PORT, DATABASE
+
+
+connection_string = "postgresql+asyncpg://%s:%s@%s:%s/%s?async_fallback=True" % (DB_USER, DB_PASSWORD, DB_HOST, str(DB_PORT), DATABASE)
+
+engine = create_async_engine(url=connection_string)
 
 async_session = async_sessionmaker(engine)
 
@@ -11,8 +16,8 @@ class Base(AsyncAttrs, DeclarativeBase):
     pass
 
 
-class Page(Base):
-    __tablename__ = 'tasks'
+class Task(Base):
+    __tablename__ = 'task'
 
     id: Mapped[int] = mapped_column(primary_key=True)
     tasks: Mapped[str] = mapped_column(String())
