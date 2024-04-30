@@ -22,6 +22,9 @@ class Task(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     tasks: Mapped[str] = mapped_column(String())
 
+    def __str__(self):
+        return f"id: {self.id}, tasks: {self.tasks}\n"
+
 
 async def async_main():
     async with engine.begin() as conn:
